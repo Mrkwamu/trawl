@@ -1,0 +1,21 @@
+[project]
+name = "trawl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Mrkwamu", email = "jeffreyfestus1@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.162.0",
+    "pydantic>=2.14.1",
+    "tldextract>=5.4.0",
+]
+
+[project.scripts]
+trawl = "trawl:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
