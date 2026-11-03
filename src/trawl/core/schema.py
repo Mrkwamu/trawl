@@ -5,29 +5,27 @@ from tldextract import tldextract
 
 HOSTNAME_LABEL_PATTERN = re.compile(r"[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?")
 
+
 class CompanyUrlInput(BaseModel):
     url: HttpUrl
 
-    @field_validator('url', mode='before')
+    @field_validator("url", mode="before")
     @classmethod
     def prepare_url(cls, value: str) -> str:
         if not isinstance(value, str):
-            raise ValueError('Url must be a string')
+            raise ValueError("Url must be a string")
 
         cleaned_url = value.strip()
 
         if not cleaned_url:
-            raise ValueError('Url must not be empty')
+            raise ValueError("Url must not be empty")
 
-        if '://' not in cleaned_url:
+        if "://" not in cleaned_url:
             cleaned_url = f"https://{cleaned_url}"
-
-        print(f"{cleaned_url} from before pydantic")
 
         return cleaned_url
 
-
-    @field_validator('url', mode='after')
+    @field_validator("url", mode="after")
     @classmethod
     def validate_url(cls, url: HttpUrl) -> HttpUrl:
         hostname = url.host
@@ -41,7 +39,7 @@ class CompanyUrlInput(BaseModel):
         labels = hostname.rstrip(".").split(".")
 
         if hostname.endswith(".") or not all(
-                HOSTNAME_LABEL_PATTERN.fullmatch(label) for label in labels
+            HOSTNAME_LABEL_PATTERN.fullmatch(label) for label in labels
         ):
             raise ValueError("Invalid hostname format")
 
@@ -50,7 +48,4 @@ class CompanyUrlInput(BaseModel):
         if not extracted_domain.domain or not extracted_domain.suffix:
             raise ValueError("URL must contain a recognized public domain suffix")
 
-        print(f"{url} from after pydantic")
-
         return url
-
