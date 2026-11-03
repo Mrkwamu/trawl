@@ -22,6 +22,8 @@ class CompanyUrlInput(BaseModel):
         if '://' not in cleaned_url:
             cleaned_url = f"https://{cleaned_url}"
 
+        print(f"{cleaned_url} from before pydantic")
+
         return cleaned_url
 
 
@@ -47,6 +49,8 @@ class CompanyUrlInput(BaseModel):
 
         if not extracted_domain.domain or not extracted_domain.suffix:
             raise ValueError("URL must contain a recognized public domain suffix")
+
+        print(f"{url} from after pydantic")
 
         return url
 

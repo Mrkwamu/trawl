@@ -9,6 +9,8 @@ from trawl.core.schema import CompanyUrlInput
 def normalize_url(raw_url: str) -> str:
     try:
         validated_url = CompanyUrlInput(url=raw_url).url
+
+        print(f"{raw_url} -> {validated_url}")
         return str(validated_url)
 
     except ValidationError as exc:
