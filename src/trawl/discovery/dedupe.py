@@ -10,7 +10,7 @@ def make_link_key(href: str) -> str:
 
     host = parsed.hostname
     if not host:
-        return href  # not a normal web link, so compare it as plain text
+        return href  
 
     host = host.removeprefix("www.")
     path = parsed.path.rstrip("/")
