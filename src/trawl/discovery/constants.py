@@ -1,3 +1,5 @@
+from trawl.discovery.text import clean_path_piece, clean_text
+
 NEGATIVE_DOMAINS = [
     "facebook.com",
     "youtube.com",
@@ -129,12 +131,11 @@ NEGATIVE_KEYWORDS = [
     "cookie notice",
     "invoices",
     "learn more",
-    "get started"
-
+    "get started",
 ]
 
 
-CAREER_KEYWORDS = [
+RAW_CAREER_KEYWORDS = [
     "careers",
     "career",
     "jobs",
@@ -157,6 +158,56 @@ CAREER_KEYWORDS = [
     "view all jobs",
     "search jobs",
     "explore careers",
+    "explore open roles",
     "find a job",
     "View open positions",
 ]
+
+
+RAW_CAREER_PATHS = [
+    "careers",
+    "career",
+    "jobs",
+    "job",
+    "openings",
+    "job-openings",
+    "open-positions",
+    "open-roles",
+    "current-openings",
+    "vacancies",
+    "opportunities",
+    "join-us",
+    "join-our-team",
+    "join-the-team",
+    "work-with-us",
+    "work-for-us",
+    "were-hiring",
+    "we-are-hiring",
+    "hiring",
+    "now-hiring",
+    "positions",
+    "recruitment",
+    "employment",
+    "talent",
+    "team",
+]
+
+
+ATS_DOMAINS = [
+    "greenhouse.io",
+    "ashbyhq.com",
+    "lever.co",
+    "recruitee.com",
+]
+
+CAREER_KEYWORDS = [clean_text(k) for k in RAW_CAREER_KEYWORDS]
+CAREER_PATHS = [clean_path_piece(p) for p in RAW_CAREER_PATHS]
+
+TRAWL_SCORE = {"ATS_SCORE": 55, "PATH_SCORE": 30, "TEXT_SCORE": 15}
+
+SCORE_THRESHOLD = 30
+MAX_CANDIDATES = 5
+
+
+# greenhouse, moniepoint
+# ashyby figma, notion, ramp
