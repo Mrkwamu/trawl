@@ -30,3 +30,8 @@ class FetchFailedError(TrawlError):
     code = "FETCH_FAILED"
     message = "Could not fetch the page"
     status_code = 502
+
+class SiteBlockedError(TrawlError):
+    code = "SITE_BLOCKED"
+    message = "The site refused our request, it may block automated access"
+    status_code = 502
