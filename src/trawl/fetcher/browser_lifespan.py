@@ -6,6 +6,7 @@ from playwright.async_api import async_playwright
 
 logger = logging.getLogger(__name__)
 
+
 @asynccontextmanager
 async def browser_lifespan(app: FastAPI):
     logger.info("Starting Playwright and launching browser")
