@@ -10,7 +10,7 @@ def make_link_key(href: str) -> str:
 
     host = parsed.hostname
     if not host:
-        return href  
+        return href
 
     host = host.removeprefix("www.")
     path = parsed.path.rstrip("/")
@@ -27,16 +27,16 @@ def make_link_key(href: str) -> str:
 
 
 def deduplicate_links(items: list[dict[str, str]]) -> list[dict[str, str]]:
-    seen_keys = set()
-    unique_links = []
+    kept: dict[str, dict[str, str]] = {}
 
     for item in items:
         key = make_link_key(item.get("href", ""))
 
-        if key in seen_keys:
-            continue
+        if key not in kept:
+            kept[key] = item
+        elif not kept[key].get("text", "").strip() and item.get("text", "").strip():
+            kept[key] = (
+                item  
+            )
 
-        seen_keys.add(key)
-        unique_links.append(item)
-
-    return unique_links
+    return list(kept.values())
