@@ -1,23 +1,38 @@
-from playwright.async_api import Browser, Error as playwright_Error, TimeoutError
+from playwright.async_api import Browser, TimeoutError
+from playwright.async_api import Error as playwright_Error
 
 from trawl.core.errors import (
     BadStatusError,
     DomainNotFoundError,
     FetchFailedError,
     PageTimeoutError,
+    SiteBlockedError,
 )
 from trawl.core.schema import CompanyUrlInput
 from trawl.fetcher.schema import PageFetchResult
 
 
-async def page_fetcher(browser: Browser, companyUrl: CompanyUrlInput) -> PageFetchResult:
-    context = await browser.new_context()
+async def page_fetcher(
+    browser: Browser, companyUrl: CompanyUrlInput
+) -> PageFetchResult:
+    user_agent = (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        f"Chrome/{browser.version} Safari/537.36"
+    )
+    context = await browser.new_context(user_agent=user_agent)
     try:
         page = await context.new_page()
         response = await page.goto(str(companyUrl.url))
 
-        if response is None or not response.ok:
-            raise BadStatusError()
+        if response is None:
+            raise FetchFailedError()
+
+        if response.status in (403, 409):
+            raise SiteBlockedError()
+
+        if not response.ok:
+            raise BadStatusError
 
         locator = page.locator("a[href], iframe[src]")
 
@@ -28,10 +43,9 @@ async def page_fetcher(browser: Browser, companyUrl: CompanyUrlInput) -> PageFet
                                            }))
                                            """)
 
-
         return PageFetchResult(
             final_url=response.url,
-            data= links,
+            data=links,
         )
 
     except TimeoutError as e:
